@@ -4,27 +4,30 @@ using namespace std;
 class Node
 {   public:
     int data;
-    Node *link;
+    Node *next;
+    Node *prev;
 };
 
-class SinglyLinkedList
+class DoublynextedList
 {   public:
     Node *head;
-    SinglyLinkedList(){
+    DoublynextedList(){
         head = new Node;
         head->data = 101;
-        head->link = NULL;
+        head->next = NULL;
+        head->prev = NULL;
     };
-    SinglyLinkedList(int x){
+    DoublynextedList(int x){
         head = new Node;
         head->data = x;
-        head->link = NULL;
+        head->next = NULL;
+        head->prev = NULL;
     }
-    ~SinglyLinkedList(){
+    ~DoublynextedList(){
         Node *t,*p = head;
         while(p!=NULL){
             t=p;
-            p= p->link;
+            p= p->next;
             delete t;
         }
         cout<<"List has been deleted"<<endl;
@@ -34,12 +37,12 @@ class SinglyLinkedList
         int flag =0,pos=0;
         Node *p = head;
         while(p!= NULL){
-            pos++;   
+            pos++;
             if(p->data == x){
                 flag=1;
                 break;   
             }
-            p=p->link;
+            p=p->next;
         }
         return(flag ? pos : -1); 
     }
@@ -49,32 +52,38 @@ class SinglyLinkedList
         newNode->data = x;
         if(pos == 0){
             //Head
-            newNode->link = head;
+            newNode->next = head;
+            newNode->prev = head->prev;
+            head->prev->next =newNode;
+            head->prev = newNode;
             head = newNode;
         } else if (pos>0)
         {   Node *p = head;
             for(int i=0; i < pos-1 ;i++){
-                p=p->link;
+                p=p->next;
             }
-            newNode->link = p->link;
-            p->link = newNode;
+            newNode->next = p->next;
+            newNode->prev = p;
+            p->next->prev = newNode;
+            p->next = newNode;
         }
     }
     void insert(int x){
         Node *p = head,*newNode = new Node;
         newNode->data = x;
-        newNode->link = NULL;
-        while(p->link !=NULL){
-            p= p->link;
+        newNode->next = NULL;
+        while(p->next !=NULL){
+            p= p->next;
         }
-        p->link = newNode;
+        newNode->prev =p;
+        p->next = newNode;
     }
     void display(){
         int pos=0;
         Node *p = head;
         while(p!= NULL){
             cout<<++pos<<": "<<p->data<<endl;
-            p=p->link;
+            p=p->next;
         }
         cout<<"----------------"<<endl;
     }
@@ -82,25 +91,24 @@ class SinglyLinkedList
         int flag=0;
         if(head->data == x){
             Node *t = head;
-            head=head->link;
+            head=head->next;
+            head->prev=NULL;
             delete t;
             flag=1;
         } else
         {
             Node *p = head;
-            Node *q = p;
-            p=p->link;
+            p=p->next;
             while(p!=NULL){
                 if(p->data == x){
-                    q->link = p->link;
+                    p->next->prev= p->prev;
+                    p->prev->next = p->next;
                     delete p;
-                    p=q->link;
                     flag=1;
                     break;
                 } else
                 {
-                    q=p;
-                    p=p->link;
+                    p=p->next;
                 }
                  
             }
@@ -108,30 +116,31 @@ class SinglyLinkedList
     }
     int isSorted(){
         Node *q=head,*p=head;
-        p= p->link;
+        p= p->next;
         int i=0;
         while(p != NULL){
             if(p->data < q->data){
                 return(0);
             }
             q=p;
-            p= p->link;
+            p= p->next;
         }
         return(1);
     }
     void removeDuplicates(){
         if(isSorted()){
-            Node *q=head,*p=head;
-            p= p->link;
+            Node *q=head,*p=head->next;
             while(p !=NULL){
                 if(q->data == p->data){
-                    q->link =  p->link;
+                    q->next =  p->next;
+                    if(p->next !=NULL)    
+                        p->next->prev= p->prev;
                     delete p;
-                    p=q->link;
+                    p=q->next;
                 } else
                 {
                     q=p;
-                    p= p->link;
+                    p= p->next;
                 }  
             }
         } else
@@ -139,20 +148,56 @@ class SinglyLinkedList
             cout<<"List is not sorted. Duplicated Cannot be removed."<<endl;
         }
     }
-};
+    int count(){
+        Node *p = head;
+        int x=0;
+        while(p!=NULL){
+            x++;
+            p= p->next;
+        }
+        return(x);
+    }
+    void reverse(){
+        Node *p,*q,*t;
+        p=head;
+        q=t=NULL;
+        int flag=0;
+        while (!flag)
+        {
+            q=p;
+            p=p->next;
 
+            t = q->next;
+            // cout<<q->data<<endl;
+            q->next =q->prev;
+            q->prev=t;
+            t=NULL;
+            
+            if(p == NULL){
+                flag=1;
+                head=q;
+                break;
+            }
+        }
+    }
+};
 
 int  main()
 {
     int A[10]={3,5,7,19,19,19,19,33,82,82};
-    SinglyLinkedList l(3);
-    for(int i=0;i<10;i++){
+    // int A[]={3,5,7,19,33,82};
+    DoublynextedList l(3);
+    for(int i=0; i<10;i++){
         l.insert(A[i]);
     }
     l.display();
     l.removeDuplicates();
     l.display();
 
+    // cout<<l.head->next->next->next->next->next->data<<endl;
+
+    l.reverse();
+    l.display();
 
 
 return(0);
