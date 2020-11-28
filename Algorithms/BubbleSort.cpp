@@ -4,6 +4,12 @@
 #include<string.h>
 using namespace std;
 
+class Node{
+    public:
+    int data;
+    Node *link;
+};
+
 int FindMaxFromArray(int A[],int n){
     int max = A[0];
     for(int i=1; i<n;i++){
@@ -141,22 +147,59 @@ void CountSort(int A[],int n){
             A[j++]=i;
             B[i]--;
         }
-    B[100]=256;
-    cout<<B[100]<<endl;
     delete[] B;
-    cout<<B[100]<<endl;
+return;
+}
+void BinSort(int A[],int n){
+    int max = FindMaxFromArray(A,n);
+    Node **B = new Node *[max+1] {0};
+    for(int i =0; i< n ;i++){
+        Node *newNode = new Node;
+        newNode->data = A[i];
+        newNode->link = NULL;
+        if(B[A[i]]==NULL){
+            B[A[i]] = newNode;
+        } 
+        else{
+            Node *p = B[A[i]];
+            while(p->link != NULL){
+                p=p->link;
+            }
+            p->link = newNode;
+        }
+    }
+    int j=0;
+    for(int i=0; i< max+1 ; i++){
+        while(B[i] != NULL){
+            A[j++]=i;
+            Node *p = B[i];
+            B[i] = B[i]->link;
+            delete p;
+        }
+    }
+    delete []*B;
+return;
+}
+void ShellSort(int A[],int n){
+
+return;
+}
+void RadixSort(int A[],int n){
+
+
 return;
 }
 
-
 int main(){
-    int A[10]={6,8,4,2,5,9,1,0,3,-3};
+    int A[10]={6,8,4,2,5,9,1,0,3,7};
     int B[10]={10,80,30,90,40,50,70,20,60,130};
     int n=10;
 
-    DisplayArray(B,n);
-    CountSort(B,n);
-    DisplayArray(B,n);
+    DisplayArray(A,n);
+    // CountSort(B,n);
+    BinSort(A,n);
+    DisplayArray(A,n);
+
 
 return 0;
 }

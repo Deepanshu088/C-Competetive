@@ -1,11 +1,9 @@
 //https://codeforces.com/problemset/problem/32/B
 //Borze
-
 #include<iostream>
 #include<conio.h>
 #include<string>
 using namespace std;
-
 void func(){
     int i,j,n,code[200],ni=0;
     char s[200];
@@ -30,9 +28,7 @@ void func(){
     }
 return;
 }
-
 int main(){
     func();
-
 return 0;
 }
