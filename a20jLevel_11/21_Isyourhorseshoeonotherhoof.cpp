@@ -6,15 +6,32 @@
 using namespace std;
 
 void func(){
-    unsigned int A[4];
-    for(int i=0;i<4;i++){
-        cin>>A[i];
+    unsigned long int a,b,c,d;
+    int count=0;
+    cin>>a>>b>>c>>d;
+    if(a==b)
+        count++;
+    if(a==c)
+        count++;
+    if(a==d)
+        count++;
+    if(b==c)
+        count++;
+    if(d==b)
+        count++;
+    if(d==c)
+        count++;
+    
+    if(count==3){
+        cout<<2;
+        return;
     }
-    for(int i=0;i<4;i++){
-        for(int i=0;)
+    if(count==6){
+        cout<<3;
+        return;
     }
-
-
+    if(count<3)
+        cout<<count;
 
 return;
 }
